@@ -43,7 +43,7 @@ module.exports = function getMiddleware(options = {}) {
     options.headers = options.headers.join(',');
   }
 
-  return async function cors(ctx, next) {
+  return function cors(ctx, next) {
     
     /**
      * Access Control Allow Origin
