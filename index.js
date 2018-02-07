@@ -4,20 +4,18 @@
  * CORS middleware
  *
  * @param {Object} [options]
- * @return {GeneratorFunction}
+ * @return {Function}
  * @api public
  */
-module.exports = function getMiddleware(options) {
-  
-  options = options || {};
+module.exports = function getMiddleware(options = {}) {
 
-  var defaults = {
+  const defaults = {
     origin: true,
     methods: 'GET,HEAD,PUT,POST,DELETE'
   };
 
   // Set defaults
-  for (var key in defaults) {
+  for (const key in defaults) {
     if (!options.hasOwnProperty(key)) {
       options[key] = defaults[key];
     }
@@ -45,12 +43,12 @@ module.exports = function getMiddleware(options) {
     options.headers = options.headers.join(',');
   }
 
-  return async function cors(ctx, next) {
+  return function cors(ctx, next) {
     
     /**
      * Access Control Allow Origin
      */
-    var origin;
+    let origin;
 
     if (typeof options.origin === 'string') {
       origin = options.origin;
@@ -63,7 +61,7 @@ module.exports = function getMiddleware(options) {
     }
 
     if (origin === false) {
-       return await next();
+       return next();
     }
 
     ctx.set('Access-Control-Allow-Origin', origin);
@@ -97,7 +95,7 @@ module.exports = function getMiddleware(options) {
     /**
      * Access Control Allow Headers
      */
-    var headers;
+    let headers;
 
     if (options.headers) {
       headers = options.headers;
@@ -115,7 +113,7 @@ module.exports = function getMiddleware(options) {
     if (ctx.method === 'OPTIONS') {
       ctx.status = 204;
     } else {
-      return await next();
+      return next();
     }
   };
 };
